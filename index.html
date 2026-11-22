@@ -1,0 +1,107 @@
+==================== index.html ====================
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080d18">
+<title>AVIATOR X2 PRO v3.0</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main class="app">
+<header class="top"><div><p class="eyebrow">ADVANCED ANALYTICS EDITION</p><h1>AVIATOR <span>X2 PRO</span></h1><p class="sub">Version 3.0 · Statistical analysis lab</p></div><span class="badge">LOCAL DATA</span></header>
+<aside class="warning"><b>Important:</b> This is a history tracker and statistical analysis tool, not a prediction engine. Historical rates, streaks and confidence intervals do not tell you whether the next round will reach 2x.</aside>
+<section class="panel hero">
+ <div class="hero-top"><div><p class="eyebrow">NEXT ROUND</p><h2 id="nextRound">Round 1</h2></div><span class="badge" id="slotBadge">PLAY SLOT · DEMO</span></div>
+ <div class="forecast"><p class="eyebrow">NEXT-ROUND 2x FORECAST</p><strong>NOT PREDICTABLE</strong><small id="forecastText">Record actual outcomes to build historical reports.</small></div>
+ <div class="tap-grid"><button id="winBtn" class="tap win">✓ &nbsp; WIN — reached 2x</button><button id="lossBtn" class="tap loss">× &nbsp; LOSS — below 2x</button></div>
+ <p class="tip">Tap once after each completed round. Record every round, including rounds where your demo strategy skips.</p>
+</section>
+<section class="metrics">
+ <article class="panel metric"><span>Total rounds</span><b id="total">0</b></article><article class="panel metric"><span>2x hits</span><b id="wins">0</b></article>
+ <article class="panel metric"><span>Below 2x</span><b id="losses">0</b></article><article class="panel metric"><span>Historical hit rate</span><b id="rate">—</b></article>
+</section>
+<section class="panel">
+ <div class="section-title"><div><p class="eyebrow">STATISTICAL ESTIMATE</p><h3>Historical hit-rate interval</h3></div><select id="window"><option value="10">Last 10</option><option value="25">Last 25</option><option value="50">Last 50</option><option value="100">Last 100</option><option value="all">All rounds</option></select></div>
+ <div class="stats4"><div><span>Sample size</span><b id="sample">0</b></div><div><span>Observed hit rate</span><b id="windowRate">—</b></div><div><span>95% Wilson interval</span><b id="ci">—</b></div><div><span>Longest losing streak</span><b id="longLoss">0</b></div></div>
+ <div class="chart-wrap"><canvas id="chart" height="180"></canvas></div><p class="tip">The Wilson interval describes uncertainty around the historical sample rate. It is not a next-round prediction.</p>
+</section>
+<section class="panel">
+ <div class="section-title"><div><p class="eyebrow">STRATEGY BACKTEST</p><h3>One Play / One Skip</h3></div><span class="badge">HISTORICAL ONLY</span></div>
+ <div class="settings-grid"><label>First slot<select id="firstSlot"><option value="play">Play</option><option value="skip">Skip</option></select></label><label>Demo stake<input id="stake" type="number" min=".01" step=".01" value="1"></label></div>
+ <div class="stats4"><div><span>Demo plays</span><b id="plays">0</b></div><div><span>Simulated wins</span><b id="simWins">0</b></div><div><span>Simulated losses</span><b id="simLosses">0</b></div><div><span>Net demo units</span><b id="net">0.00</b></div></div>
+ <div class="stats3"><div><span>Win rate on played rounds</span><b id="playRate">—</b></div><div><span>Worst peak-to-trough drawdown</span><b id="drawdown">0.00</b></div><div><span>Longest loss streak on plays</span><b id="playLossStreak">0</b></div></div>
+ <p class="tip">Simplified assumption: 2x hit = +1 stake net; below 2x = −1 stake. Skips = 0. Fees, platform rules and real-money effects are excluded.</p>
+</section>
+<section class="panel">
+ <div class="section-title"><div><p class="eyebrow">SESSION REPORT</p><h3>Daily activity</h3></div><span class="count" id="sessionCount">0 days</span></div>
+ <div class="table-scroll"><table><thead><tr><th>Date</th><th>Rounds</th><th>2x hits</th><th>Hit rate</th></tr></thead><tbody id="sessions"></tbody></table></div>
+</section>
+<section class="panel">
+ <div class="section-title"><div><p class="eyebrow">ROUND LOG</p><h3>History</h3></div><span class="count" id="shownCount">0 records</span></div>
+ <div class="filters"><input id="search" type="search" placeholder="Search round number or result"><select id="filter"><option value="all">All results</option><option value="WIN">WIN only</option><option value="LOSS">LOSS only</option></select></div>
+ <div class="table-scroll"><table><thead><tr><th>Round</th><th>Result</th><th>Strategy slot</th><th>Demo P/L</th><th>Time</th></tr></thead><tbody id="history"></tbody></table></div><div id="empty" class="empty">No rounds recorded yet.</div>
+</section>
+<section class="panel">
+ <div class="section-title"><div><p class="eyebrow">BACKUP & RESTORE</p><h3>Manage your data</h3></div></div>
+ <div class="settings-grid"><label>Export type<select id="exportFormat"><option value="json">JSON backup (recommended)</option><option value="csv">CSV spreadsheet</option></select></label><label>Import backup<input id="importFile" type="file" accept=".json,.csv,application/json,text/csv"></label></div>
+ <div class="buttons"><button id="exportBtn" class="utility">Export backup</button><button id="undoBtn" class="utility">Undo last round</button><button id="resetBtn" class="utility danger">Delete all history</button></div>
+ <p class="tip">Data is saved only in this browser on this device. It is not synced to GitHub or a server. Export backups regularly. Import replaces current history after confirmation.</p><p id="message" class="message" role="status"></p>
+</section>
+<footer>AVIATOR X2 PRO v3.0 · Independent educational tracker · No gambling-platform connection</footer>
+</main><script src="app.js"></script></body></html>
+
+==================== style.css ====================
+:root{color-scheme:dark;--panel:#121d2e;--line:#2b3c55;--text:#edf4ff;--muted:#9cacc3;--green:#28d99a;--red:#ff607a;--gold:#ffd27d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1c3454 0,transparent 55%),#080d18;color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.app{max-width:980px;margin:auto;padding:22px 15px 42px}
+.top,.hero-top,.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}.top{margin-bottom:18px;align-items:flex-start}.eyebrow{font-size:10px;letter-spacing:1.8px;color:var(--muted);font-weight:850;margin:0 0 5px}h1{font-size:clamp(25px,5vw,36px);line-height:1.15;margin:0;letter-spacing:1px}h1 span{color:var(--green)}h2{font-size:25px;margin:0}h3{font-size:18px;margin:0}.sub{color:var(--muted);font-size:11px;margin:5px 0}.badge{border:1px solid #3a5575;background:#1a2a40;color:#d2e5ff;border-radius:30px;padding:6px 10px;font-size:10px;font-weight:850;white-space:nowrap}
+.warning{border:1px solid #6e562b;background:#302717;color:#ffe7b0;border-radius:12px;padding:12px 14px;font-size:12px;margin-bottom:14px}.panel{background:linear-gradient(145deg,#142035,#101827);border:1px solid var(--line);border-radius:17px;padding:17px;margin:13px 0;box-shadow:0 12px 32px #0003}.hero{padding:21px}.forecast{text-align:center;padding:23px 10px 19px}.forecast strong{display:block;color:var(--gold);font-size:clamp(25px,6vw,38px);margin:5px 0}.forecast small{color:var(--muted);font-size:11px}.tap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tap,.utility{border:0;border-radius:11px;padding:14px 12px;font-weight:850;font-size:13px;cursor:pointer}.tap:active,.utility:active{transform:scale(.985)}.win{background:var(--green);color:#062116}.loss{background:var(--red);color:#2a0710}.tip{font-size:10px;color:var(--muted);margin:11px 0 0}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{margin:0;padding:13px}.metric span,.stats4 span,.stats3 span{display:block;color:var(--muted);font-size:10px}.metric b{display:block;font-size:25px;margin-top:4px}.section-title{margin-bottom:14px}.section-title .eyebrow{margin-bottom:3px}.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.stats4>div,.stats3>div{background:#0b1422;border:1px solid var(--line);border-radius:10px;padding:11px;min-width:0}.stats4 b,.stats3 b{font-size:18px;display:block;margin-top:4px;overflow-wrap:anywhere}.chart-wrap{margin-top:16px;background:#0a1422;border:1px solid var(--line);border-radius:12px;padding:10px;height:215px}.chart-wrap canvas{width:100%;height:180px;display:block}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.settings-grid label{font-size:11px;color:var(--muted);display:grid;gap:6px}.settings-grid input,.settings-grid select,.section-title select{background:#0a1423;color:var(--text);border:1px solid #3a4a62;border-radius:9px;padding:9px;max-width:100%;min-width:0}.settings-grid input,.settings-grid select{width:100%}.filters{display:flex;gap:8px;margin-bottom:10px}.filters input,.filters select{background:#0a1423;color:var(--text);border:1px solid #3a4a62;border-radius:9px;padding:9px}.filters input{flex:1}.filters select{width:145px}.table-scroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:540px;font-size:11px}td,th{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}th{font-size:9px;letter-spacing:.7px;color:var(--muted);text-transform:uppercase}.tag{display:inline-block;padding:3px 7px;border-radius:20px;font-size:9px;font-weight:900}.tag.win{background:#123d30;color:#75f0bd}.tag.loss{background:#481e2b;color:#ff9aaa}.tag.skip{background:#253650;color:#c5d8f4}.empty{text-align:center;padding:20px;color:var(--muted);font-size:12px}.count{font-size:10px;color:var(--muted)}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.utility{background:#263a56;color:#e7f1ff;padding:10px 12px;font-size:11px}.utility.danger{background:transparent;border:1px solid #a7475d;color:#ff9bac}.message{font-size:11px;color:var(--green);min-height:14px}footer{text-align:center;color:#73849f;font-size:10px;margin-top:23px}
+@media(max-width:620px){.metrics{grid-template-columns:repeat(2,1fr)}.stats4{grid-template-columns:repeat(2,1fr)}.stats3{grid-template-columns:1fr}.tap-grid{grid-template-columns:1fr}.top{align-items:flex-start}.settings-grid{grid-template-columns:1fr}.section-title{align-items:flex-start}.filters{flex-direction:column}.filters select{width:100%}}
+
+
+==================== app.js ====================
+(() => {
+"use strict";
+const KEY="aviator-x2-pro-v3";
+const $=id=>document.getElementById(id);
+let data=load();
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.rounds))return x}catch(e){}return{rounds:[],firstSlot:"play",stake:1}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function slotAt(i){return i%2===0?data.firstSlot:(data.firstSlot==="play"?"skip":"play")}
+function stake(){return Math.max(.01,Number($("stake").value)||1)}
+function msg(s){$("message").textContent=s}
+function add(result){const i=data.rounds.length,slot=slotAt(i),played=slot==="play",unit=stake();data.stake=unit;data.rounds.push({id:i+1,result,slot,pnl:!played?0:(result==="WIN"?unit:-unit),time:new Date().toISOString()});save();render();msg("Round "+(i+1)+" saved locally.")}
+function longest(rs,val){let n=0,b=0;for(const r of rs){n=r.result===val?n+1:0;b=Math.max(b,n)}return b}
+function wilson(k,n){if(!n)return null;const z=1.96,p=k/n,z2=z*z,den=1+z2/n,mid=(p+z2/(2*n))/den,margin=z*Math.sqrt((p*(1-p)/n)+(z2/(4*n*n)))/den;return[Math.max(0,mid-margin)*100,Math.min(1,mid+margin)*100]}
+function selected(){const v=$("window").value;return v==="all"?data.rounds:data.rounds.slice(-Number(v))}
+function render(){
+ const rs=data.rounds,n=rs.length,k=rs.filter(r=>r.result==="WIN").length;
+ $("total").textContent=n;$("wins").textContent=k;$("losses").textContent=n-k;$("rate").textContent=n?(100*k/n).toFixed(1)+"%":"—";
+ $("nextRound").textContent="Round "+(n+1);$("slotBadge").textContent=slotAt(n).toUpperCase()+" SLOT · DEMO";
+ const w=selected(),wk=w.filter(r=>r.result==="WIN").length,ci=wilson(wk,w.length);
+ $("sample").textContent=w.length;$("windowRate").textContent=w.length?(100*wk/w.length).toFixed(1)+"%":"—";
+ $("ci").textContent=ci?ci[0].toFixed(1)+"–"+ci[1].toFixed(1)+"%":"—";$("longLoss").textContent=longest(w,"LOSS");
+ const played=rs.filter(r=>r.slot==="play"),pw=played.filter(r=>r.result==="WIN").length,pl=played.length-pw,unit=stake(),net=(pw-pl)*unit;
+ let equity=0,peak=0,dd=0,streak=0,best=0;played.forEach(r=>{equity+=r.result==="WIN"?unit:-unit;peak=Math.max(peak,equity);dd=Math.max(dd,peak-equity);streak=r.result==="LOSS"?streak+1:0;best=Math.max(best,streak)});
+ $("plays").textContent=played.length;$("simWins").textContent=pw;$("simLosses").textContent=pl;$("net").textContent=(net>0?"+":"")+net.toFixed(2);$("net").style.color=net>0?"var(--green)":net<0?"var(--red)":"var(--text)";
+ $("playRate").textContent=played.length?(pw/played.length*100).toFixed(1)+"%":"—";$("drawdown").textContent=dd.toFixed(2);$("playLossStreak").textContent=best;
+ drawChart(w);renderSessions();renderHistory();
+}
+function drawChart(rs){const c=$("chart"),ctx=c.getContext("2d"),ratio=window.devicePixelRatio||1,width=c.clientWidth,height=180;c.width=width*ratio;c.height=height*ratio;ctx.scale(ratio,ratio);ctx.clearRect(0,0,width,height);ctx.font="10px system-ui";ctx.strokeStyle="#293951";ctx.fillStyle="#9cacc3";
+ for(let j=0;j<=4;j++){let y=10+j*37;ctx.beginPath();ctx.moveTo(29,y);ctx.lineTo(width-7,y);ctx.stroke();ctx.fillText(100-j*25+"%",1,y+3)}
+ if(!rs.length){ctx.fillText("No recorded rounds",width/2-40,95);return}
+ const groups=[];for(let i=0;i<rs.length;i+=10){let a=rs.slice(i,i+10);groups.push({rate:a.filter(x=>x.result==="WIN").length/a.length*100,label:String(i+1)})}
+ const step=(width-42)/groups.length,bw=Math.max(4,Math.min(22,step*.55));groups.forEach((g,i)=>{let h=150*g.rate/100,x=31+i*step+step/2-bw/2;ctx.fillStyle="#28d99a";ctx.fillRect(x,160-h,bw,h);ctx.fillStyle="#9cacc3";ctx.fillText(g.label,x-2,176)});
+}
+function renderSessions(){const map=new Map();data.rounds.forEach(r=>{const day=new Date(r.time).toLocaleDateString();if(!map.has(day))map.set(day,{n:0,w:0});const x=map.get(day);x.n++;if(r.result==="WIN")x.w++});const rows=[...map.entries()].reverse();$("sessionCount").textContent=rows.length+" days";$("sessions").innerHTML=rows.map(([day,x])=>`<tr><td>${day}</td><td>${x.n}</td><td>${x.w}</td><td>${(x.w/x.n*100).toFixed(1)}%</td></tr>`).join("")}
+function renderHistory(){const q=$("search").value.trim().toLowerCase(),f=$("filter").value,list=data.rounds.slice().reverse().filter(r=>(f==="all"||r.result===f)&&(!q||String(r.id).includes(q)||r.result.toLowerCase().includes(q)));$("shownCount").textContent=list.length+" records";$("empty").style.display=list.length?"none":"block";$("history").innerHTML=list.map(r=>`<tr><td>#${r.id}</td><td><span class="tag ${r.result.toLowerCase()}">${r.result}</span></td><td>${r.slot.toUpperCase()}</td><td>${r.pnl>0?"+":""}${Number(r.pnl).toFixed(2)}</td><td>${new Date(r.time).toLocaleString()}</td></tr>`).join("")}
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function exportData(){if($("exportFormat").value==="json")download("aviator-x2-pro-v3-backup.json",JSON.stringify(data,null,2),"application/json");else{const rows=[["round","result","slot","pnl","time"],...data.rounds.map(r=>[r.id,r.result,r.slot,r.pnl,r.time])];const csv=rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");download("aviator-x2-pro-v3-history.csv",csv,"text/csv")}msg("Backup downloaded.")}
+function csvRows(text){const lines=text.trim().split(/\r?\n/);if(lines.length<2)throw Error("No CSV data rows.");const parse=line=>{let out=[],v="",q=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'&&q&&line[i+1]==='"'){v+='"';i++}else if(c==='"')q=!q;else if(c===","&&!q){out.push(v);v=""}else v+=c}out.push(v);return out};const h=parse(lines.shift()).map(x=>x.toLowerCase().trim()),ri=h.indexOf("result");if(ri<0)throw Error('CSV needs a "result" column.');return lines.filter(x=>x.trim()).map((line,i)=>{const a=parse(line),result=(a[ri]||"").toUpperCase().trim();if(!["WIN","LOSS"].includes(result))throw Error("Invalid result at CSV data row "+(i+1));return{id:i+1,result,slot:"play",pnl:0,time:new Date().toISOString()}})}
+$("winBtn").addEventListener("click",()=>add("WIN"));$("lossBtn").addEventListener("click",()=>add("LOSS"));
+$("window").addEventListener("change",render);$("search").addEventListener("input",renderHistory);$("filter").addEventListener("change",renderHistory);
+$("firstSlot").addEventListener("change",e=>{data.firstSlot=e.target.value;save();render();msg("First slot saved.")});$("stake").addEventListener("change",e=>{data.stake=stake();save();render()});
+$("undoBtn").addEventListener("click",()=>{if(!data.rounds.length)return msg("Nothing to undo.");data.rounds.pop();save();render();msg("Last round removed.")});
+$("resetBtn").addEventListener("click",()=>{if(confirm("Delete all saved history from this browser? Export a backup first if needed.")){data.rounds=[];save();render();msg("History deleted.")}});
+$("exportBtn").addEventListener("click",exportData);
+$("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const text=await file.text();let incoming,first="play",unit=1;if(file.name.toLowerCase().endsWith(".json")){const obj=JSON.parse(text);if(!obj||!Array.isArray(obj.rounds))throw Error("Invalid JSON backup.");incoming=obj.rounds.map((r,i)=>{const result=String(r.result||"").toUpperCase();if(!["WIN","LOSS"].includes(result))throw Error("Invalid result in JSON backup.");return{id:i+1,result,slot:r.slot==="skip"?"skip":"play",pnl:Number(r.pnl)||0,time:r.time||new Date().toISOString()}});first=obj.firstSlot==="skip"?"skip":"play";unit=Math.max(.01,Number(obj.stake)||1)}else incoming=csvRows(text);if(!confirm("Replace current history with "+incoming.length+" imported rounds?"))return;data={rounds:incoming.map((r,i)=>({...r,id:i+1})),firstSlot:first,stake:unit};save();render();msg("Imported "+incoming.length+" rounds.")}catch(err){msg("Import failed: "+err.message)}finally{e.target.value=""}});
+window.addEventListener("resize",()=>drawChart(selected()));render();
+})();
